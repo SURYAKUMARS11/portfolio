@@ -1,9 +1,39 @@
 [
   {
+    "name": "Knowledge Hub",
+    "desc": "A modern, advanced Knowledge Management System built with the MERN (MongoDB, Express, React, Node.js) stack.",
+    "image": "knhub",
+    "category": "web",
+    "links": {
+      "view": "https://react-knowlegde-hub.vercel.app/",
+      "code": "https://github.com/SURYAKUMARS11/React-KnowlegdeHub"
+    }
+  },
+  {
+    "name": "Readify-Store",
+    "desc": " Readify is a book marketplace platform, featuring a Node.js/Express backend and a React (Vite) frontend.",
+    "image": "readify",
+    "category": "web",
+    "links": {
+      "view": "https://readify-swart.vercel.app/",
+      "code": "https://github.com/SURYAKUMARS11/Readify"
+    }
+  },
+  {
+    "name": "React Loan App",
+    "desc": "A loan management platform featuring an AI-powered chatbot that helps users understand loan options",
+    "image": "loanapp",
+    "category": "web",
+    "links": {
+      "view": "https://react-loan-app-three.vercel.app",
+      "code": "https://github.com/SURYAKUMARS11/React-LoanApp"
+    }
+  },
+  {
     "name": "Agency-Envotech",
     "desc": " Tech Service Provider Company site template which has sections like services,aboutus,Contact.",
     "image": "Envotech",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://envotech.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/Envotech"
@@ -13,7 +43,7 @@
     "name": "Music concert - Festiva-live",
     "desc": "Festiva is a music festival website templat which includes book ticket option , contact",
     "image": "Night",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://event-site-sigma.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/Event-site"
@@ -23,7 +53,7 @@
     "name": "Gym-fitness-website",
     "desc": "Gym Website Template with all the sections like Home,About,Services,Contact etc.",
     "image": "fit",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://gym-fit-jet.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/Gym-website"
@@ -33,7 +63,7 @@
     "name": "Personal Portfolio",
     "desc": "Personal Portfolio Website using HTML,CSS and JS which includes about,projects and experaince.",
     "image": "port",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://fi-alt.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/portfolio"
@@ -43,7 +73,7 @@
     "name": "Logistic site-Faster",
     "desc": "Logistics Website Template with all the sections like Home,About,Services,Contact etc.",
     "image": "Faster",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://faster-flax.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/Faster"
@@ -53,7 +83,7 @@
     "name": "Cookery site - Feane",
     "desc": "Cookery Website Template with all the sections like Home,About,Services,Contact etc.",
     "image": "cook",
-    "category": "basicweb",
+    "category": "web",
     "links": {
       "view": "https://cookery-site.vercel.app/",
       "code": "https://github.com/SURYAKUMARS11/Cookery-site"

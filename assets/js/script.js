@@ -1,179 +1,243 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', () => {
+    const menu = document.querySelector('#menu');
+    const navbar = document.querySelector('.navbar');
+    const scrollTop = document.querySelector('#scroll-top');
+    const themeToggle = document.querySelector('#theme-toggle');
 
-    $('#menu').click(function () {
-        $(this).toggleClass('fa-times');
-        $('.navbar').toggleClass('nav-toggle');
+    // Theme Toggle Logic
+    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+    if (currentTheme) {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'light') {
+            themeToggle.classList.replace('fa-moon', 'fa-sun');
+        }
+    }
+
+    themeToggle.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggle.classList.replace('fa-moon', 'fa-sun');
+        }
     });
 
-    $(window).on('scroll load', function () {
-        $('#menu').removeClass('fa-times');
-        $('.navbar').removeClass('nav-toggle');
+    menu.addEventListener('click', () => {
+        menu.classList.toggle('fa-times');
+        navbar.classList.toggle('nav-toggle');
+    });
+
+    window.addEventListener('scroll', () => {
+        menu.classList.remove('fa-times');
+        navbar.classList.remove('nav-toggle');
 
         if (window.scrollY > 60) {
-            document.querySelector('#scroll-top').classList.add('active');
+            scrollTop.classList.add('active');
         } else {
-            document.querySelector('#scroll-top').classList.remove('active');
+            scrollTop.classList.remove('active');
         }
 
-        // scroll spy
-        $('section').each(function () {
-            let height = $(this).height();
-            let offset = $(this).offset().top - 200;
-            let top = $(window).scrollTop();
-            let id = $(this).attr('id');
+        // Scroll spy
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.navbar ul li a');
+
+        sections.forEach(section => {
+            const height = section.offsetHeight;
+            const offset = section.offsetTop - 200;
+            const top = window.scrollY;
+            const id = section.getAttribute('id');
 
             if (top > offset && top < offset + height) {
-                $('.navbar ul li a').removeClass('active');
-                $('.navbar').find(`[href="#${id}"]`).addClass('active');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
             }
         });
     });
 
-    // smooth scrolling
-    $('a[href*="#"]').on('click', function (e) {
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop: $($(this).attr('href')).offset().top,
-        }, 500, 'linear')
+    // Smooth scrolling for all links with hashes
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
     });
 });
 
-document.addEventListener('visibilitychange',
-    function () {
-        if (document.visibilityState === "visible") {
-            document.title = "Portfolio";
-            $("#favicon").attr("href", "assets/images/logo.png");
-        }
-        else {
-            document.title = "Thanks-Visit Again";
-            $("#favicon").attr("href", "assets/images/logo.png");
-        }
-    });
+document.addEventListener('visibilitychange', () => {
+    const favicon = document.getElementById('favicon');
+    if (document.visibilityState === "visible") {
+        document.title = "Portfolio | Suryakumar";
+        favicon.setAttribute("href", "assets/images/logo.png");
+    } else {
+        document.title = "Come Back Soon! | Portfolio";
+        favicon.setAttribute("href", "assets/images/logo.png");
+    }
+});
 
-
-// <!-- typed js effect starts -->
-var typed = new Typed(".typing-text", {
-    strings: ["Web developer","FreeLancer","Student Ambassador at Microsoft"],
+// Typed.js effect
+const typed = new Typed(".typing-text", {
+    strings: ["MERN Stack Developer", "FreeLancer", "Cloud Enthusiast"],
     loop: true,
     typeSpeed: 50,
     backSpeed: 25,
     backDelay: 500,
 });
-// <!-- typed js effect ends -->
 
 async function fetchData(type = "skills") {
-    let response
-    type === "skills" ?
-        response = await fetch("skills.json")
-        :
-        response = await fetch("./projects/projects.json")
-    const data = await response.json();
-    return data;
+    let response;
+    try {
+        if (type === "skills") {
+            response = await fetch("skills.json");
+        } else {
+            response = await fetch("./projects/projects.json");
+        }
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Fetch error: ", error);
+        return [];
+    }
 }
 
-function showProjects(projects) {
-    let projectsContainer = document.querySelector("#work .box-container");
+function showSkills(skills) {
+    const skillsContainer = document.querySelector(".skills .skills-container");
+    let skillHTML = "<div class='row'>";
+    
+    skills.forEach(skill => {
+        skillHTML += `
+        <div class="column">
+            <div class="skill tilt">
+                <div class="skill-content">
+                    <img src="${skill.icon}" alt="${skill.name} Icon" class="skill-icon">
+                    <div class="skill-details">
+                        <h3>${skill.name}</h3>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${skill.percentage}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    });
+    skillHTML += "</div>";
+    
+    if (skillsContainer) {
+        skillsContainer.innerHTML = skillHTML;
+        VanillaTilt.init(document.querySelectorAll(".tilt"), {
+            max: 15,
+        });
+    }
+}
+
+function showProjects(projects, filter = "all") {
+    const projectsContainer = document.querySelector("#work .box-container");
     let projectHTML = "";
-    projects.slice(0, 10).filter(project => project.category != "android").forEach(project => {
-        projectHTML += `
-        <div class="box tilt">
-      <img draggable="false" src="/assets/images/projects/${project.image}.png" alt="project" />
-      <div class="content">
-        <div class="tag">
-        <h3>${project.name}</h3>
-        </div>
-        <div class="desc">
-          <p>${project.desc}</p>
-          <div class="btns">
-            <a href="${project.links.view}" class="btn" target="_blank"><i class="fas fa-eye"></i> View</a>
-            <a href="${project.links.code}" class="btn" target="_blank">Code <i class="fas fa-code"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>`
-    });
-    projectsContainer.innerHTML = projectHTML;
+    
+    let filteredProjects = projects;
+    if (filter !== "all") {
+        filteredProjects = projects.filter(project => project.category === filter);
+    }
 
-    // <!-- tilt js effect starts -->
-    VanillaTilt.init(document.querySelectorAll(".tilt"), {
-        max: 15,
-    });
-    // <!-- tilt js effect ends -->
-
-    /* ===== SCROLL REVEAL ANIMATION ===== */
-    const srtop = ScrollReveal({
-        origin: 'top',
-        distance: '80px',
-        duration: 1000,
-        reset: true
-    });
-
-    /* SCROLL PROJECTS */
-    srtop.reveal('.work .box', { interval: 200 });
-
+    filteredProjects.slice(0, 10)
+        .forEach(project => {
+            projectHTML += `
+            <div class="box tilt">
+                <img draggable="false" src="/assets/images/projects/${project.image}.png" alt="${project.name}" />
+                <div class="content">
+                    <div class="tag">
+                        <h3>${project.name}</h3>
+                    </div>
+                    <div class="desc">
+                        <p>${project.desc}</p>
+                        <div class="btns">
+                            <a href="${project.links.view}" class="btn" target="_blank"><i class="fas fa-eye"></i> View</a>
+                            <a href="${project.links.code}" class="btn" target="_blank">Code <i class="fas fa-code"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        });
+    
+    if (projectsContainer) {
+        projectsContainer.innerHTML = projectHTML;
+        VanillaTilt.init(document.querySelectorAll(".tilt"), {
+            max: 15,
+        });
+        ScrollReveal().reveal('.work .box', { interval: 200 });
+    }
 }
 
-fetchData().then(data => {
+fetchData("skills").then(data => {
     showSkills(data);
 });
 
 fetchData("projects").then(data => {
     showProjects(data);
+    
+    // Add event listeners for project filters (if they exist)
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            showProjects(data, btn.getAttribute('data-filter'));
+        });
+    });
 });
 
-// <!-- tilt js effect starts -->
+// Initialize VanillaTilt for static elements
 VanillaTilt.init(document.querySelectorAll(".tilt"), {
     max: 15,
 });
-// <!-- tilt js effect ends -->
 
-
-// pre loader start
-// function loader() {
-//     document.querySelector('.loader-container').classList.add('fade-out');
-// }
-// function fadeOut() {
-//     setInterval(loader, 500);
-// }
-// window.onload = fadeOut;
-// pre loader end
-
-/*achieventments */
-
+// Accordion for Achievements
 function toggleAccordion(id) {
-    var elements = document.querySelectorAll('.accordion-content');
-    elements.forEach(function(element) {
-      element.style.display = 'none';
+    const contents = document.querySelectorAll('.accordion-content');
+    contents.forEach(content => {
+        content.style.display = 'none';
     });
     
-    var targetElement = document.getElementById(id);
-    targetElement.style.display = 'block';
+    const target = document.getElementById(id);
+    if (target) target.style.display = 'flex';
     
-    var headings = document.querySelectorAll('.accordion-heading');
-    headings.forEach(function(heading) {
-      heading.classList.remove('active');
+    const headings = document.querySelectorAll('.accordion-heading');
+    headings.forEach(heading => {
+        heading.classList.remove('active');
+        if (heading.getAttribute('data-target') === id) {
+            heading.classList.add('active');
+        }
     });
-    
-    var clickedHeading = document.querySelector('.accordion-heading[data-target="' + id + '"]');
-    clickedHeading.classList.add('active');
-  }
-  
+}
 
-// Start of Tawk.to Live Chat
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/65ddf2ab9131ed19d9723ebf/1hnlfns44';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
+// Tawk.to Live Chat
+var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+(function () {
+    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+    s1.async = true;
+    s1.src = 'https://embed.tawk.to/65ddf2ab9131ed19d9723ebf/1hnlfns44';
+    s1.charset = 'UTF-8';
+    s1.setAttribute('crossorigin', '*');
+    s0.parentNode.insertBefore(s1, s0);
 })();
 
-// End of Tawk.to Live Chat
-
-
-/* ===== SCROLL REVEAL ANIMATION ===== */
+// Scroll Reveal Animations
 const srtop = ScrollReveal({
     origin: 'top',
     distance: '80px',
@@ -181,54 +245,29 @@ const srtop = ScrollReveal({
     reset: true
 });
 
-/* SCROLL HOME */
-srtop.reveal('.home .content h3', { delay: 200 });
-srtop.reveal('.home .content p', { delay: 200 });
-srtop.reveal('.home .content .btn', { delay: 200 });
-
-srtop.reveal('.home .image', { delay: 400 });
-srtop.reveal('.home .linkedin', { interval: 600 });
-srtop.reveal('.home .github', { interval: 800 });
-srtop.reveal('.home .twitter', { interval: 1000 });
-srtop.reveal('.home .telegram', { interval: 600 });
-srtop.reveal('.home .instagram', { interval: 600 });
-srtop.reveal('.home .dev', { interval: 600 });
-
-/* SCROLL ABOUT */
+srtop.reveal('.home .content h2', { delay: 200 });
+srtop.reveal('.home .content p', { delay: 300 });
+srtop.reveal('.home .content .btn', { delay: 400 });
+srtop.reveal('.home .image', { delay: 500 });
+srtop.reveal('.home .social-icons li', { interval: 200 });
 srtop.reveal('.about .content h3', { delay: 200 });
-srtop.reveal('.about .content .tag', { delay: 200 });
-srtop.reveal('.about .content p', { delay: 200 });
-srtop.reveal('.about .content .box-container', { delay: 200 });
-srtop.reveal('.about .content .resumebtn', { delay: 200 });
-
-
-/* SCROLL SKILLS */
+srtop.reveal('.about .content .tag', { delay: 300 });
+srtop.reveal('.about .content p', { delay: 400 });
+srtop.reveal('.about .content .box-container', { delay: 500 });
+srtop.reveal('.about .content .resumebtn', { delay: 600 });
 srtop.reveal('.skills .row', { interval: 200 });
-srtop.reveal('.skills .row', { delay: 400 });
-
-/* SCROLL ACHEIVEMENTS */
-
-
-/* SCROLL PROJECTS */
-srtop.reveal('.work .box', { interval: 200 });
-
-/* SCROLL EXPERIENCE */
 srtop.reveal('.experience .timeline', { delay: 400 });
 srtop.reveal('.experience .timeline .container', { interval: 400 });
-
-/* SCROLL CONTACT */
 srtop.reveal('.contact .container', { delay: 400 });
-srtop.reveal('.contact .container .form-group', { delay: 400 });
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch((error) => {
-        console.log('Service Worker registration failed:', error);
-      });
-  });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+    });
 }
-

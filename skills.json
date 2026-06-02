@@ -1,0 +1,67 @@
+[
+  {
+    "name": "React",
+    "icon": "https://img.icons8.com/external-tal-revivo-color-tal-revivo/240/external-react-a-javascript-library-for-building-user-interfaces-logo-color-tal-revivo.png",
+    "percentage": "85"
+  },
+  {
+    "name": "Node.js",
+    "icon": "https://img.icons8.com/color/480/nodejs.png",
+    "percentage": "80"
+  },
+  {
+    "name": "Express",
+    "icon": "https://img.icons8.com/officel/480/express-js.png",
+    "percentage": "75"
+  },
+  {
+    "name": "MongoDB",
+    "icon": "assets/images/mongo.png",
+    "percentage": "70"
+  },
+  {
+    "name": "Angular",
+    "icon": "https://img.icons8.com/color/480/angularjs.png",
+    "percentage": "65"
+  },
+  {
+    "name": "Cloud",
+    "icon": "https://img.icons8.com/fluency/480/cloud-lighting.png",
+    "percentage": "70"
+  },
+  {
+    "name": "HTML",
+    "icon": "assets/images/hmtl.png",
+    "percentage": "95"
+  },
+  {
+    "name": "CSS",
+    "icon": "assets/images/css.png",
+    "percentage": "90"
+  },
+  {
+    "name": "JavaScript",
+    "icon": "assets/images/js.png",
+    "percentage": "85"
+  },
+  {
+    "name": "Tailwind",
+    "icon": "https://img.icons8.com/color/480/tailwindcss.png",
+    "percentage": "80"
+  },
+  {
+    "name": "Git",
+    "icon": "assets/images/git.png",
+    "percentage": "95"
+  },
+  {
+    "name": "Python",
+    "icon": "assets/images/python.png",
+    "percentage": "80"
+  },
+  {
+    "name": "SQL",
+    "icon": "assets/images/sql.png",
+    "percentage": "75"
+  }
+]
